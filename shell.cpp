@@ -17,6 +17,7 @@ using namespace std;
 TODO:
 
  - Implement cd ~ (takes you to the home directory)
+ - cd $(ls -l | grep '^d'|head -1|awk '{print $9}')     (doesn't like the quotes on '^q'
 
 
 */
@@ -72,6 +73,8 @@ string trim(string input) {
     return trimString;
 }
 
+
+
 //Ensure this is working
 char** vec_to_char_array(vector<string>& parts)
 {
@@ -85,12 +88,25 @@ char** vec_to_char_array(vector<string>& parts)
 	return result;
 }
 
+string getSignExpansion(string line){
+    size_t first = line.find_first_not_of('(');
+    if (string::npos == first) {
+        return line;
+    }
+    size_t last = line.find_last_not_of(')');
+    return line.substr(first, (last - first + 1));
+}
+
 vector<string> split(string line, char separator = ' ') {
     vector<string> parsedInput;
     int c = 0;
     int num_quotes = 0;
     bool inside_quotes = false;
     int start = 0;
+
+
+    string signExpansion = getSignExpansion(line);
+    cout << signExpansion << endl;
 
     for(int i = 0; i < line.size(); i++) {
 

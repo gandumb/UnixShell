@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <climits>
 
 using namespace std;
 
@@ -99,10 +100,38 @@ vector<string> split(string line, char separator = ' ') {
     return parsedInput;
 }
 
+vector<string> getSignExpansion(string line){
+    size_t first = line.find_first_of('(');
+    vector<string> output;
+
+    if (string::npos == first) {
+        output.push_back("");
+        output.push_back(line);
+        return output;
+    }
+    size_t last = line.find_last_of(')');
+
+    output.push_back(line);
+    output.at(0).replace(first-1, last-first+2, " ");
+
+    output.push_back(line.substr(first+1, (last - first) - 1));
+    return output;
+}
+
 int main(){
-    string testString =  "    hello    \"   w\'or         \'ld   \"!!     ";
-    cout << testString << endl;
-    std::cout << trim(testString) << std::endl;
+    // string testString =  "    hello    \"   w\'or         \'ld   \"!!     ";
+    // cout << testString << endl;
+    // std::cout << trim(testString) << std::endl;
+
+    string testString2 = "cd $(ls -l | grep '^d'|head -1|awk '{print $9}')";
+    //string testString2 = "cat /proc/$(ps|grep bash|head -1|awk '{print $1}')/status";
+
+    cout << testString2 << endl;
+    cout << getSignExpansion(testString2).at(0) << endl;
+    cout << getSignExpansion(testString2).at(1) << endl;
+
+    // cout << testString2.find("z") << endl;
+    // cout << LONG_MAX << endl;
 
     return 0;
 }
